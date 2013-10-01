@@ -1,0 +1,11 @@
+restTest Readme
+
+Here's a little Rest API app that I use to test some of our API First stories.
+
+This code is based on Metadaddy's TestRestAPIPage contribution: https://gist.github.com/metadaddy-sfdc/5860374. 
+
+To use this code:
+1. login into your salesforce.com org
+2. Store bootstrap.zip as a static resource (only if you want to take advantage of bootstrap's CSS / JS)
+3. add restTestPage as a visualforce page
+4. add a custom tab pointing to the restTestPage

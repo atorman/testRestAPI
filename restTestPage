@@ -1,0 +1,77 @@
+<apex:page controller="quickViewController" sidebar="false" standardStylesheets="false" showHeader="false">
+<head> 
+    <title>REST TEST</title>
+
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"/> 
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"/> 
+
+    <apex:includeScript value="{!URLFOR($Resource.bootstrap, 'bootstrap/js/bootstrap.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.bootstrap, 'bootstrap/js/bootstrap.min.js')}"/>
+    
+    <apex:stylesheet value="{!URLFOR($Resource.bootstrap, 'bootstrap/css/bootstrap.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.bootstrap, 'bootstrap/css/bootstrap.min.css')}"/>
+    
+     <style type="text/css"><!-- Spacing for the Nav bar -->
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+  </head>  
+  <body>
+     <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+            <a class="brand" href="#">Test REST API</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+            <li><a href="/home/home.jsp">Home</a></li>
+            </ul>
+            <!--<span class="navbar-form span3 pull-right">
+                <li><a href="/home/home.jsp">Home</a></li> 
+            </span>-->
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">  
+  <script>
+    jQuery(document).ready(function($) {
+      $('#queryform').submit(function(){
+        $.ajax($('#query').val(),
+        {
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader('Authorization', 'Bearer {!$Api.Session_ID}'); // set session Id to authenticate
+            xhr.setRequestHeader('X-SFDC-Request-Id', 'ABCDEFGHIJ12345678'); // set request header for logging purposes
+          },
+          success: function(response) {
+            $('#results').empty(); // clear the results before submitting the next rest call
+            $('#results').append(JSON.stringify(response, null, '  ')); // stringify JSON results from REST API call
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            alert(jqXHR.status + ': ' + errorThrown);
+          }
+        });
+        return false;
+      });
+    });
+  </script>
+  <form id="queryform">
+    <!-- Default general rest end point -->
+    <input id="query"  value="/services/data/v29.0" style="width:700px"/>
+    <!-- Uncomment the following default for Event Log Files query -->
+    <!--<input id="query"  value="/services/data/v29.0/query?q=SELECT+Id+,+EventType+,+LogFile+,+LogDate+,+LogFileLength+FROM+EventLogFile+WHERE+EventType+=+'ReportExport'" style="width:700px"/>-->
+    <input type="submit" id="submit" value="Submit" />
+  </form>
+  <p>Results:</p>
+    <pre id="results">
+    </pre>
+    </div>
+  </body>
+</apex:page>
